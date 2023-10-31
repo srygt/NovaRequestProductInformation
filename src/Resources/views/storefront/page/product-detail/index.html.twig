@@ -1,0 +1,107 @@
+{% sw_extends '@Storefront/storefront/page/product-detail/index.html.twig' %}
+
+{% block page_product_detail_inner %}
+    {% block page_product_detail_content %}
+        <div class="product-detail-content">
+            <div class="container">
+                {% block page_product_detail_breadcrumb %}
+                {% endblock %}
+                {% block page_product_detail_headline %}
+                {% endblock %}
+
+                {% set mediaItems = page.product.media.media %}
+
+                {% block page_product_detail_main %}
+                    <div class="row product-detail-main">
+                        {% block page_product_detail_media %}
+                            <div class="col-lg-6 product-detail-media">
+                                {% if page.product.media %}
+                                    {% sw_include '@Storefront/storefront/element/cms-element-image-gallery.html.twig' with {
+                                        'mediaItems': mediaItems,
+                                        'zoom': false,
+                                        'zoomModal': false,
+                                        'displayMode': 'standard',
+                                        'gutter': 5,
+                                        'minHeight': '700px',
+                                        'navigationArrows': '',
+                                        'navigationDots': '',
+                                        'galleryPosition': 'underneath',
+                                        'isProduct': true,
+                                        'fallbackImageTitle': page.product.translated.name,
+                                        'startIndexThumbnails': page.product.cover.position + 1,
+                                        'startIndexSlider': page.product.cover.position + 1
+                                    } %}
+                                {% endif %}
+                            </div>
+                        {% endblock %}
+
+                        {% block page_product_detail_buy %}
+                            <div class="col-lg-6 product-detail-buy">
+                                <div class="row align-items-center product-detail-headline">
+                                    {% sw_include '@Storefront/storefront/page/product-detail/headline.html.twig' %}
+                                </div>
+
+                                {% sw_include '@Storefront/storefront/page/product-detail/buy-widget.html.twig' %}
+                                
+                                {% if page.product.sortedProperties|length > 0 %}
+                                    <button class="btn btn-outline-primary btn-block collapsed" type="button"
+                                            data-toggle="collapse"
+                                            data-target="#productProperties" aria-expanded="false"
+                                            aria-controls="productProperties">
+                                        Eigenschaften
+                                    </button>
+                                    <div class="collapse" id="productProperties">
+                                        {% for group in page.product.sortedProperties %}
+                                            {% block page_product_detail_properties_table_row %}
+                                                {% block page_product_detail_properties_item_label %}
+                                                    <strong>{{ group.translated.name|e }}:</strong>
+                                                {% endblock %}
+                                                {% block page_product_detail_properties_item_value %}
+                                                    {% apply spaceless %}
+                                                        {% for option in group.options %}
+                                                            {% set i = ( i | default(0) ) + 1 %}
+                                                            <span>{% if i > 1 %}, {% endif %}{{ option.translated.name|e }}</span>
+                                                        {% endfor %}<br>
+                                                    {% endapply %}
+                                                {% endblock %}
+                                            {% endblock %}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <button class="btn btn-outline-primary btn-block collapsed" type="button"
+                                        data-toggle="collapse"
+                                        data-target="#productDescription" aria-expanded="false"
+                                        aria-controls="productDescription">
+                                    Beschreibung
+                                </button>
+                                <div class="collapse" id="productDescription">
+                                    <p>{{ page.product.translated.description|raw }}</p>
+                                </div>
+                                <br>
+                                <p><button type="button" class="btn btn-success">Fragen Sie nach dem Produkt</button></p>
+                            </div>
+                        {% endblock %}
+                    </div>
+                {% endblock %}
+                {% if (page.product.customFields.custom_beschreibugn_product_tab_editor) %}
+                <div class="cms-beschreibugn-product-tab-editor">{{ page.product.customFields.custom_beschreibugn_product_tab_editor|raw }}</div>
+                {% endif %}
+            </div>
+        </div>
+    {% endblock %}
+
+    {% block page_product_detail_cross_selling %}
+        {% if page.crossSellings.elements.0 is defined %}
+            <div class="container">
+                <div class="product-detail-tabs product-detail-cross-selling">
+                    {% sw_include '@Storefront/storefront/page/product-detail/cross-selling/tabs.html.twig' with {
+                        crossSellings: page.crossSellings
+                    } only %}
+                </div>
+            </div>
+        {% endif %}
+        
+    {% endblock %}
+    {% block page_product_detail_tabs %}
+    {% endblock %}
+{% endblock %}

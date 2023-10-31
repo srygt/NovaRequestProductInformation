@@ -1,0 +1,26 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="NovaRequestProductInformation\Service\NovaRequestProductInformationService">
+        </service>
+
+        <service id="NovaRequestProductInformation\Subscriber\Subscriber">
+            <argument type="service" id="Symfony\Contracts\EventDispatcher\EventDispatcherInterface"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <service id="NovaRequestProductInformation\Command\NovaRequestProductInformationCommand">
+            <tag name="console.command" command="novarequestproductinformation:novarequestproductinformationcommand"/>
+        </service>
+
+        <service id="NovaRequestProductInformation\Storefront\Controller\NovaRequestProductInformationController" public="true">
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+        </service>                
+    </services>
+</container>
